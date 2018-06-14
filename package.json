@@ -14,11 +14,11 @@
     ],
     "directories": {
       "buildResources": "resources"
-    },
-    "publish": "null"
+    }
   },
   "scripts": {
     "postinstall": "electron-builder install-app-deps",
+    "publish": "build -p always",
     "start": "node build/start.js",
     "release": "webpack --config=build/webpack.app.config.js --env=production && electron-builder -mwl"
   },

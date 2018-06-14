@@ -43,6 +43,7 @@ function getCourseNamesAndURLS(courseURL) {
     request(courseURL, (err, body) => {
       let chapterUrls = [];
       let names = [];
+      let isPrivate = false;
       if (!err) {
         let $ = cheerio.load(body.body);
         /* Filter out names of chapters and their urls from the current course url */
@@ -69,9 +70,15 @@ function getCourseNamesAndURLS(courseURL) {
           filterChapterUrls.map(el => {
             chapterUrls.push(el.attribs.href);
           });
+
+          if($('.standard-block_blue').children().length > 0) {
+            isPrivate = true;
+          }
+
           resolve({
             chapterUrls,
-            names
+            names,
+            isPrivate
           });
         });
       } else {
@@ -108,7 +115,7 @@ window.onload = () => {
           if (result) {
             setTimeout(() => {
               selectors.id_overlay.style.display = 'none';
-            }, 3000)
+            }, 500)
           }
           selectors.id_resultDiv.style.display = "block";
           dwnBtn = document.createElement("button");
@@ -137,12 +144,15 @@ window.onload = () => {
               resultul.appendChild(li);
             }
             dwnBtn.addEventListener("click", () => {
+              if(result.isPrivate) {
+                alert('The course is currently private.');
+                return;
+              }
               let dwnpath = dialog.showOpenDialog({
                 properties: ['openDirectory']
               });
 
               if (dwnpath === undefined) return;
-
               if (!fs.existsSync(`${dwnpath}${path.sep}${course_url_title[course_url_title.length - 1]}`)) {
                 fs.mkdirSync(`${dwnpath}${path.sep}${course_url_title[course_url_title.length - 1]}`);
               }
