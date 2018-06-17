@@ -118,6 +118,11 @@ window.onload = () => {
             }, 500)
           }
           selectors.id_resultDiv.style.display = "block";
+
+          if (document.querySelector('#downloadWrap').contains(document.querySelector('#download'))) {
+            document.querySelector('#downloadWrap').removeChild(document.querySelector('#download'));
+          }
+
           dwnBtn = document.createElement("button");
           dwnBtn.id = "download";
           dwnBtn.textContent = "Download";
