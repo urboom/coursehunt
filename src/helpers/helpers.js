@@ -9,14 +9,17 @@ const {
 
 const selectors = require("./selectors");
 
+/* A replace all function */
 const replaceAll = (target, search, replacement) => {
   return target.replace(new RegExp(search, 'g'), replacement);
 };
 
+/* Calculates the time remaining */
 const downloadTimeRemaining = (time) => {
   return (time > 60) ? `${Math.floor(time / 60)}m` : `${Math.floor(time)}s`;
 }
 
+/* Formats the bytes into kB, mB etc */
 const formatBytes = (bytes, decimals) => {
   if (bytes == 0) return '0 Bytes';
   var k = 1024,
@@ -26,6 +29,7 @@ const formatBytes = (bytes, decimals) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
 }
 
+/* Check if the url entered is valid */
 const isValidURL = (url) => {
   const pattern = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
   if (pattern.test(url)) {
@@ -70,11 +74,6 @@ const findVidExist = (videos, name, dwnpath) => {
 
 /* The basic function which downloads a video from the url */
 const downloadOne = (url, chapterName, dwnpath, nextVideo) => {
-  if (typeof url === 'undefined') {
-    //alert("Download Completed");
-    //selectors.id_downloadWrap.style.display = 'none';
-    //process.exit(0);
-  }
   let _request = request(url);
   let req = progress(_request, {
     //throttle: 2000,
@@ -120,6 +119,7 @@ const downloadOne = (url, chapterName, dwnpath, nextVideo) => {
   });
 }
 
+/* A function which pauses the download on a single click */
 const pauseIt = (req, selector) => {
   req.pause();
   selectors.id_chapterName.textContent = `Paused`;
@@ -127,6 +127,7 @@ const pauseIt = (req, selector) => {
   selectors.getQuerySelector(`${selector}`).textContent = 'Resume';
 };
 
+/* A function which resumes the download on a single click */
 const resumeIt = (req, selector) => {
   req.resume();
   selectors.getQuerySelector(`${selector}`).classList.add(["pause"]);
